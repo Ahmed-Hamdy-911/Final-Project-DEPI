@@ -13,6 +13,7 @@ import '../../models/category_model.dart';
 import '../../widgets/custom_set_location_widget.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/custom_text_form.dart';
+import '../../widgets/custom_working_hours.dart';
 import '../../widgets/cutom_material_button.dart';
 
 class AddPlacesView extends StatefulWidget {
@@ -34,6 +35,7 @@ class _AddPlacesViewState extends State<AddPlacesView> {
     super.initState();
     BlocProvider.of<AppCubit>(context)
         .setAddLocationController(_addLocationController);
+    BlocProvider.of<ImageCubit>(context).clearImageList();
   }
 
   @override
@@ -193,20 +195,25 @@ class _AddPlacesViewState extends State<AddPlacesView> {
                         endIndent: 20,
                         thickness: 1,
                       ),
-                      BlocProvider(
-                        create: (context) => ImageCubit(),
-                        child: Builder(builder: (context) {
-                          return const Column(
-                            children: [
-                              ImageView(),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              ImageBuilderView(),
-                            ],
-                          );
-                        }),
+                      CustomWorkingHours(),
+                      Divider(
+                        height: 25,
+                        color: Colors.grey[300],
+                        indent: 20,
+                        endIndent: 20,
+                        thickness: 1,
                       ),
+                      Builder(builder: (context) {
+                        return const Column(
+                          children: [
+                            ImageView(),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            ImageBuilderView(),
+                          ],
+                        );
+                      }),
                       const SizedBox(
                         height: 10,
                       ),
@@ -219,14 +226,29 @@ class _AddPlacesViewState extends State<AddPlacesView> {
                       ),
                       CustomMaterialButton(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                            // await appCubit.uploadImagesToCloudStorage();
+                            await appCubit.addNewPlace(context,
+                                name: _titleController.text,
+                                description: _descriptionController.text,
+                                location: _addLocationController.text,
+                                category: appCubit.selectedCategory!.name,
+                                images: BlocProvider.of<ImageCubit>(context)
+                                    .images);
+                          }
                         },
                         minWidth: MediaQuery.of(context).size.width,
-                        widget: const CustomText(
-                          text: "اضافة",
-                          textColor: Colors.white,
-                          fontSize: 17,
-                        ),
+                        widget: state is LoadingAppState
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const CustomText(
+                                text: "اضافة",
+                                textColor: Colors.white,
+                                fontSize: 17,
+                              ),
                         color: kMainColor,
                       ),
                     ],

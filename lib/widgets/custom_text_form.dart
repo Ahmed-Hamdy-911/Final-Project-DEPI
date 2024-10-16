@@ -11,7 +11,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.hintText,
     this.labelText,
-    required this.controller,
+    this.controller,
     this.prefixIcon,
     this.customBorder,
     this.maxLines = 1,
@@ -21,13 +21,16 @@ class CustomTextFormField extends StatelessWidget {
     this.labelStyle,
     this.enabled = true,
     this.onTap,
+    this.readOnly = false,
+    this.initialValue,
+    this.contentPadding,
   });
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final String? hintText;
   final String? labelText;
   final TextInputType? keyboardType;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
@@ -39,6 +42,9 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? labelStyle;
   final bool? enabled;
   final Function()? onTap;
+  final bool readOnly;
+  final String? initialValue;
+  final EdgeInsetsGeometry? contentPadding;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -48,15 +54,19 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       maxLines: maxLines,
       minLines: minLines,
+      initialValue: initialValue,
       onTapOutside: (event) {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       onTap: onTap,
+      scrollPadding: EdgeInsets.all(20.0),
       inputFormatters: inputFormatters,
       enabled: enabled,
+      readOnly: readOnly,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: labelStyle,
+        contentPadding: contentPadding,
         hintText: hintText,
         hintStyle: customHintStyle ??
             const TextStyle(

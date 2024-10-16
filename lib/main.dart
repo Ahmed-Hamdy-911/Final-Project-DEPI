@@ -1,4 +1,5 @@
 import 'package:bs_rashhuli/cubits/app_cubit/app_cubit.dart';
+import 'package:bs_rashhuli/cubits/image_cubit/image_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AppCubit()),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => TimerCubit()),
+        BlocProvider(create: (context) => ImageCubit()),
       ],
       child: MaterialApp(
         title: 'Popular Places',

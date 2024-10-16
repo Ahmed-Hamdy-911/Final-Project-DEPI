@@ -81,6 +81,15 @@ class ImageCubit extends Cubit<ImageStates> {
     }
   }
 
+  void deleteImage(int index) {
+    images.removeAt(index);
+    emit(SuccessDeleteImageState());
+  }
+
+  void clearImageList() {
+    images.clear();
+  }
+
   /// Helper function to check and request the necessary permissions based on the image source.
   Future<bool> _checkAndRequestPermission(ImageSource source) async {
     PermissionStatus status;

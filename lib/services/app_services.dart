@@ -47,8 +47,9 @@ class AppServices {
   DateTime convertStringDateToDateTime({String? date}) {
     if (date == null) {
       return DateTime.now();
+    } else {
+      return DateTime.parse(date);
     }
-    return DateTime.parse(date);
   }
 
   String formatDateTime(
