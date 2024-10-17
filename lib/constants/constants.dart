@@ -29,3 +29,13 @@ final List<String> regions = [
   "حوض الدلالة",
   "ميدان العبور",
 ];
+
+final List<String> daysOfWeek = [
+  'السبت', // Saturday
+  'الأحد', // Sunday
+  'الاثنين', // Monday
+  'الثلاثاء', // Tuesday
+  'الأربعاء', // Wednesday
+  'الخميس', // Thursday
+  'الجمعة', // Friday
+];

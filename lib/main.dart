@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ImageCubit()),
       ],
       child: MaterialApp(
-        title: 'Popular Places',
+        title: 'BNS Rashhuli',
         debugShowCheckedModeBanner: false,
         locale: const Locale('ar'), // Set the app's language to Arabic
         supportedLocales: const [

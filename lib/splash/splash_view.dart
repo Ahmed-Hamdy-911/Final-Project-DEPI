@@ -41,7 +41,7 @@ class SplashView extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.07,
                       ),
                       CustomText(
-                        text: "BS Rashhuli",
+                        text: "BNS Rashhuli",
                         customStyle: GoogleFonts.jomhuria(
                           fontSize: 55,
                           color: Colors.white,

@@ -1,3 +1,4 @@
+
 abstract class AppStates {}
 
 class InitialAppState extends AppStates {}
@@ -32,4 +33,26 @@ class ErrorFetchPlaceState extends AppStates {
   final String? error;
 
   ErrorFetchPlaceState(this.error);
+}
+
+class SuccessfulFetchPlaceDetailsState extends AppStates {
+  SuccessfulFetchPlaceDetailsState();
+}
+
+class SuccessfulFetchBannersState extends AppStates {
+  SuccessfulFetchBannersState();
+}
+
+class ErrorFetchBannersState extends AppStates {
+  final String? error;
+
+  ErrorFetchBannersState(this.error);
+}
+
+class SuccessfulFetchPlaceWithCategoryState extends AppStates {}
+
+class ErrorFetchPlaceWithCategoryState extends AppStates {
+  final String? error;
+
+  ErrorFetchPlaceWithCategoryState(this.error);
 }

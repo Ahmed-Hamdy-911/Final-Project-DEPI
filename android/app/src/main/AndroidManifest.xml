@@ -6,7 +6,7 @@ package="com.example.bs_rashhuli">
 <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
-        android:label="BS Rashhuli"
+        android:label="BNS Rashhuli"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 class DaySchedule {
-  TimeOfDay? fromTime;
-  TimeOfDay? toTime;
+  String? fromTime;
+  String? toTime;
   bool isVacation;
 
   DaySchedule({
@@ -14,24 +12,17 @@ class DaySchedule {
   // Convert DaySchedule from JSON
   factory DaySchedule.fromJson(Map<String, dynamic> json) {
     return DaySchedule(
-      fromTime: json['from'] != null
-          ? TimeOfDay(
-              hour: int.parse(json['from'].split(':')[0]),
-              minute: int.parse(json['from'].split(':')[1]))
-          : null,
-      toTime: json['to'] != null
-          ? TimeOfDay(
-              hour: int.parse(json['to'].split(':')[0]),
-              minute: int.parse(json['to'].split(':')[1]))
-          : null,
+      fromTime: json['from'],
+      toTime: json['to'],
       isVacation: json['isVacation'] ?? false,
     );
   }
 
-  Map<String, dynamic> toJson(BuildContext context) {
+  // Convert DaySchedule to JSON for Firestore
+  Map<String, dynamic> toJson() {
     return {
-      'from': fromTime != null ? fromTime!.format(context) : null,
-      'to': toTime != null ? toTime!.format(context) : null,
+      'from': fromTime,
+      'to': toTime,
       'isVacation': isVacation,
     };
   }

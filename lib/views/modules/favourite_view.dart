@@ -1,3 +1,5 @@
+import 'package:bs_rashhuli/constants/colors.dart';
+import 'package:bs_rashhuli/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class FavouriteView extends StatelessWidget {
@@ -5,6 +7,12 @@ class FavouriteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+        child: Container(
+      child: CustomText(
+        text: "قريبا...",
+        textColor: kMainColor,
+      ),
+    ));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart';
 import 'package:bs_rashhuli/helper/helper.dart';
 import 'package:bs_rashhuli/views/main_home_view.dart';
@@ -10,8 +11,9 @@ import 'package:bs_rashhuli/cubits/app_cubit/app_states.dart';
 
 import '../../models/category_model.dart';
 import '../../models/day_schedule_model.dart';
+import '../../models/fixed_hours_model.dart';
+import '../../models/place_details_model.dart';
 import '../../models/place_model.dart';
-import '../auth_cubit/auth_cubit.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppState());
@@ -40,10 +42,16 @@ class AppCubit extends Cubit<AppStates> {
     emit(SwitchTimingsState());
   }
 
+  String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
   TimeOfDay? fromTime;
   TimeOfDay? toTime;
 
-  // Method to select time
+  // Method to handle fixed time selection
   Future<void> selectFixiedTime(BuildContext context, bool isFrom) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -80,7 +88,7 @@ class AppCubit extends Cubit<AppStates> {
     );
 
     if (pickedTime != null) {
-      setDayTime(dayIndex, pickedTime, isFromTime);
+      setDayTime(dayIndex!, pickedTime, isFromTime);
     }
     weekSchedule.forEach((e) {
       if (e.fromTime != null && e.toTime != null && e.isVacation == false) {
@@ -97,12 +105,12 @@ class AppCubit extends Cubit<AppStates> {
     emit(SwitchingState());
   }
 
-  // Function to set the "from" or "to" time for a specific day
-  void setDayTime(int? dayIndex, TimeOfDay time, bool isFromTime) {
+  // Method to set time for a specific day in the week schedule
+  void setDayTime(int dayIndex, TimeOfDay time, bool isFromTime) {
     if (isFromTime) {
-      weekSchedule[dayIndex!].fromTime = time;
+      weekSchedule[dayIndex].fromTime = formatTimeOfDay(time);
     } else {
-      weekSchedule[dayIndex!].toTime = time;
+      weekSchedule[dayIndex].toTime = formatTimeOfDay(time);
     }
     emit(SetTimeState());
   }
@@ -112,17 +120,14 @@ class AppCubit extends Cubit<AppStates> {
     return weekSchedule[dayIndex].isVacation;
   }
 
-  // Get the "from" time in formatted string
-  String? getFromTime(context, int dayIndex) {
-    final time = weekSchedule[dayIndex].fromTime;
-
-    return time != null ? time.format(context) : null;
+  // Get formatted "from" time for variable schedule
+  String? getFromTime(BuildContext context, int dayIndex) {
+    return weekSchedule[dayIndex].fromTime;
   }
 
-  // Get the "to" time in formatted string
-  String? getToTime(context, int dayIndex) {
-    final time = weekSchedule[dayIndex].toTime;
-    return time != null ? time.format(context) : null;
+  // Get formatted "to" time for variable schedule
+  String? getToTime(BuildContext context, int dayIndex) {
+    return weekSchedule[dayIndex].toTime;
   }
 
   void setPlaceLocation(String region) {
@@ -136,6 +141,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   CollectionReference appRef = FirebaseFirestore.instance.collection('data');
+  String userID = FirebaseAuth.instance.currentUser!.uid;
 
   Future addNewPlace(
     BuildContext context, {
@@ -148,16 +154,15 @@ class AppCubit extends Cubit<AppStates> {
     emit(LoadingAppState());
 
     List<String> imageUrls = [];
-    FixiedHoursModel? fixiedHours;
+    FixedHoursModel? fixiedHours;
     List<DaySchedule>? variableHours;
 
     try {
-   
       if (images.isNotEmpty) {
         await uploadImageToFirebaseStorage(images, imageUrls);
       }
       if (isFixiedTimings) {
-        fixiedHours = FixiedHoursModel(
+        fixiedHours = FixedHoursModel(
           fromTime: fromTime != null ? fromTime!.format(context) : null,
           toTime: toTime != null ? toTime!.format(context) : null,
         );
@@ -168,6 +173,7 @@ class AppCubit extends Cubit<AppStates> {
 
       // Firestore upload logic
       await appRef.add({
+        'added_by': userID,
         'name': name,
         'description': description,
         'location': location,
@@ -175,7 +181,7 @@ class AppCubit extends Cubit<AppStates> {
         'images': imageUrls,
         'fixed_hours': fixiedHours != null ? fixiedHours.toJson() : null,
         'week_schedule': variableHours != null
-            ? variableHours.map((schedule) => schedule.toJson(context)).toList()
+            ? variableHours.map((schedule) => schedule.toJson()).toList()
             : null,
         'create_at': DateTime.now().toString(),
       });
@@ -215,7 +221,7 @@ class AppCubit extends Cubit<AppStates> {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
         // Use the named constructor 'fromJson'
-        placeModel = PlaceModel.fromJson(data, doc.id);
+        placeModel = PlaceModel.fromJson(data, doc.id, userID);
 
         // Add the place model to the list
         places.add(placeModel!);
@@ -231,6 +237,102 @@ class AppCubit extends Cubit<AppStates> {
     } catch (error) {
       log(error.toString());
       emit(ErrorFetchPlaceState(error.toString()));
+    }
+  }
+
+  PlaceDetailsModel? placeDetailsModel;
+  Future<void> fetchPlaceDetails({required String placeId}) async {
+    emit(LoadingAppState());
+
+    try {
+      // Check if the place ID exists in the already fetched places list
+      PlaceModel? existingPlace = places.firstWhere(
+        (place) => place.id == placeId,
+        // Return null if no match is found
+      );
+
+      // If the place is found, no need to fetch from Firestore again
+      // Convert PlaceModel to PlaceDetailsModel (or fill in the necessary details)
+      placeDetailsModel = PlaceDetailsModel(
+          addedBy: existingPlace.addedBy,
+          id: existingPlace.id,
+          name: existingPlace.name,
+          description: existingPlace.description,
+          images: existingPlace.images,
+          location: existingPlace.location,
+          category: existingPlace.category,
+          fixedHours: existingPlace.fixedHours,
+          variableHours: existingPlace.variableHours,
+          createdAt: existingPlace.createdAt);
+
+      // Emit success state with the existing data
+      emit(SuccessfulFetchPlaceDetailsState());
+        } catch (error) {
+      // Emit error state if something goes wrong
+      emit(ErrorFetchPlaceState(error.toString()));
+    }
+  }
+
+  List<Map<String, dynamic>> banners = []; // Change to List of Map
+  CollectionReference bannersRef =
+      FirebaseFirestore.instance.collection('banners');
+
+  Future<void> fetchBanners() async {
+    emit(LoadingAppState());
+    try {
+      QuerySnapshot querySnapshot = await bannersRef.get();
+      banners = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList(); // Map to Map<String, dynamic>
+
+      // Log the image_url of the first banner
+      // if (banners.isNotEmpty) {
+      //   log(banners[0]['image_url'].toString());
+      // }
+
+      emit(SuccessfulFetchBannersState());
+    } on FirebaseException catch (e) {
+      log(e.message.toString());
+      emit(ErrorFetchBannersState(e.code));
+    } catch (error) {
+      log(error.toString());
+      emit(ErrorFetchBannersState(error.toString()));
+    }
+  }
+
+  List<PlaceModel> categoryList = [];
+
+// Fetch places with custom category
+  Future<void> fetchPlacesWithCustomCategory(String category) async {
+    emit(LoadingAppState());
+    try {
+      // Fetch the data from Firebase Firestore
+      QuerySnapshot snapshot =
+          await appRef.where('category', isEqualTo: category).get();
+
+      // Check if there are no documents in the query result
+      if (snapshot.docs.isEmpty) {
+        emit(
+            ErrorFetchPlaceWithCategoryState("لا يوجد اماكن لهذه الفئة بعد !"));
+        return;
+      }
+      // Clear the previous list of places
+      categoryList.clear();
+      // Loop through each document and map to PlaceModel
+      snapshot.docs.forEach((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        // Use the named constructor 'fromJson'
+        placeModel = PlaceModel.fromJson(data, doc.id, userID);
+        // Add the place model to the list
+        categoryList.add(placeModel!);
+      });
+      emit(SuccessfulFetchPlaceWithCategoryState());
+    } on FirebaseException catch (e) {
+      log(e.message.toString());
+      emit(ErrorFetchPlaceWithCategoryState(e.code));
+    } catch (error) {
+      log(error.toString());
+      emit(ErrorFetchPlaceWithCategoryState(error.toString()));
     }
   }
 }

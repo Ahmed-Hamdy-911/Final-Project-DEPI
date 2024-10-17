@@ -59,4 +59,39 @@ class AppServices {
     DateFormat dateFormat = DateFormat(formatStyle);
     return dateFormat.format(convertStringDateToDateTime(date: date));
   }
+
+  Color getCategoryColor(String categoryName) {
+    switch (categoryName) {
+      case 'طعام':
+        return Colors.red;
+      case 'الدراسة و العمل':
+        return Colors.blue;
+      case 'الإقامة':
+        return Colors.green;
+      case 'الصحة':
+        return Colors.pink;
+      case 'النقل والمواصلات':
+        return Colors.orange;
+      case 'الترفيه و التسلية':
+        return Colors.purple;
+      case 'التسوق و الاحتياجات':
+        return Colors.teal;
+      case 'خدمات الطلاب':
+        return Colors.yellow;
+      case 'البنوك و الشؤون المالية':
+        return Colors.grey;
+      case 'الفعاليات و الأنشطة':
+        return Colors.indigo;
+      case 'اماكن للعبادة':
+        return Colors.brown;
+      case 'التكنولوجيا و الدعم':
+        return Colors.blueGrey;
+      case 'السلامة و خدمات الطوارئ':
+        return Colors.redAccent;
+      case 'غير ذلك':
+        return Colors.black;
+      default:
+        return Colors.black54;
+    }
+  }
 }

@@ -1,21 +1,19 @@
-import 'package:flutter/material.dart';
-
 import 'day_schedule_model.dart';
 import 'fixed_hours_model.dart';
 
-class PlaceModel {
+class PlaceDetailsModel {
   final String id;
   final String addedBy;
   final String name;
   final String description;
   final String location;
   final String category;
-  final List? images;
-  final FixedHoursModel? fixedHours;
-  final List<DaySchedule>? variableHours; // Variable hours are added
+  final List? images; // Images for the place
+  final FixedHoursModel? fixedHours; // Fixed working hours
+  final List<DaySchedule>? variableHours; // Variable working hours
   final String createdAt;
 
-  PlaceModel({
+  PlaceDetailsModel({
     required this.id,
     required this.addedBy,
     required this.name,
@@ -24,20 +22,21 @@ class PlaceModel {
     required this.category,
     this.images,
     this.fixedHours,
-    this.variableHours, // Added here
+    this.variableHours,
     required this.createdAt,
   });
 
-  factory PlaceModel.fromJson(json, String id, String addedBy) {
-    return PlaceModel(
+  // Factory constructor to map JSON to the PlaceDetailsModel
+  factory PlaceDetailsModel.fromJson(Map<String, dynamic> json, String id) {
+    return PlaceDetailsModel(
       id: id,
-      addedBy: addedBy,
+      addedBy: json['added_by'],
       name: json['name'],
       description: json['description'],
       location: json['location'],
       category: json['category'],
       images: json['images'] != null ? List<String>.from(json['images']) : null,
-      createdAt: json['create_at'] ?? '',
+      createdAt: json['create_at'],
       fixedHours: json['fixed_hours'] != null
           ? FixedHoursModel.fromJson(json['fixed_hours'])
           : null,
@@ -46,22 +45,5 @@ class PlaceModel {
               .map((schedule) => DaySchedule.fromJson(schedule)))
           : null,
     );
-  }
-
-  // Convert to JSON, handle both hour types
-  Map<String, dynamic> toJson(BuildContext context) {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'location': location,
-      'category': category,
-      'images': images,
-      'create_at': createdAt,
-      'fixed_hours': fixedHours?.toJson(), // Only add if it's not null
-      'week_schedule': variableHours != null
-          ? variableHours!.map((schedule) => schedule.toJson()).toList()
-          : null,
-    };
   }
 }
