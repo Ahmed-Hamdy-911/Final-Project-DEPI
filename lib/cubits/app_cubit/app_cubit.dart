@@ -267,7 +267,7 @@ class AppCubit extends Cubit<AppStates> {
 
       // Emit success state with the existing data
       emit(SuccessfulFetchPlaceDetailsState());
-        } catch (error) {
+    } catch (error) {
       // Emit error state if something goes wrong
       emit(ErrorFetchPlaceState(error.toString()));
     }
@@ -304,7 +304,7 @@ class AppCubit extends Cubit<AppStates> {
 
 // Fetch places with custom category
   Future<void> fetchPlacesWithCustomCategory(String category) async {
-    emit(LoadingAppState());
+    emit(LoadingState());
     try {
       // Fetch the data from Firebase Firestore
       QuerySnapshot snapshot =

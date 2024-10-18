@@ -75,7 +75,7 @@ class _ReqisterViewState extends State<ReqisterView> {
                                 fontWeight: FontWeight.bold,
                               ),
                               CustomText(
-                                text: "دعنا نبدأ مع BS Rashhuli",
+                                text: "دعنا نبدأ مع BNS Rashhuli",
                                 textColor: Colors.white70,
                                 fontSize: 20,
                               ),

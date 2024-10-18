@@ -36,8 +36,17 @@ class _DataOfCategoryViewState extends State<DataOfCategoryView> {
           builder: (context, snapshot) {
             return BlocBuilder<AppCubit, AppStates>(
               builder: (context, state) {
-                if (state is SuccessfulFetchPlaceWithCategoryState) {
-                  return ListView.builder(
+                if (state is LoadingState) {
+                  
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+                } else if (state is ErrorFetchPlaceWithCategoryState) {
+                  return Center(
+                    child: CustomText(text: state.error.toString()),
+                  );
+                }
+                return ListView.builder(
                     itemCount: appCubit.categoryList.length,
                     itemBuilder: (context, index) {
                       final category = appCubit.categoryList[index];
@@ -51,14 +60,6 @@ class _DataOfCategoryViewState extends State<DataOfCategoryView> {
                       );
                     },
                   );
-                } else if (state is ErrorFetchPlaceWithCategoryState) {
-                  return Center(
-                    child: CustomText(text: state.error.toString()),
-                  );
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
               },
             );
           },

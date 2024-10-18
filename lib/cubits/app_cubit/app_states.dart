@@ -1,7 +1,8 @@
-
 abstract class AppStates {}
 
 class InitialAppState extends AppStates {}
+
+class LoadingState extends AppStates {}
 
 class LoadingAppState extends AppStates {}
 

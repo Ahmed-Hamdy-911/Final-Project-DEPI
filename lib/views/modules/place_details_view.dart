@@ -5,6 +5,7 @@ import 'package:bs_rashhuli/models/place_details_model.dart';
 import 'package:bs_rashhuli/services/app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconly/iconly.dart';
 import '../../constants/constants.dart';
 import '../../widgets/custom_carousel_slider.dart';
 import '../../widgets/custom_text.dart';
@@ -105,7 +106,7 @@ class _PlaceDetailsViewState extends State<PlaceDetailsView> {
               // Display the category
               Row(
                 children: [
-                  Icon(Icons.category, color: kMainColor, size: 18),
+                  Icon(IconlyLight.category, color: kMainColor, size: 18),
                   CustomText(
                     text: 'الفئة: ',
                     textColor: Colors.black,

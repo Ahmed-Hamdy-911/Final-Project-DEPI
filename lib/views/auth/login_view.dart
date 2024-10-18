@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         const AppLogoWithName(),
                         const CustomText(
-                          text: "دعنا نبدأ مع BS Rashhuli",
+                          text: "دعنا نبدأ مع BNS Rashhuli",
                           fontSize: 16,
                           textColor: Colors.grey,
                         ),

@@ -28,25 +28,22 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   bool _isLastPage = false;
   final List<OnBoradingModel> _onBoardingList = [
     OnBoradingModel(
-      image:
-          "https://walnuthillcollege.edu/wp-content/uploads/2021/08/WH_Header_Degree_Programs-360x300.png",
-      title: 'Lorem Ipsum is simply dummy text ',
+      image: "assets/images/on_boarding_1.jpg",
+      title: 'مرحبا بك في BNS Rashhuli!',
       description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's .",
+          "تطبیقنا ھو دلیلك لاكتشاف أجمل الأماكن والوجھات في محافظة بني سویف، من متاجر ومطاعم ومواقع ترفیھیة.",
     ),
     OnBoradingModel(
-      image:
-          "https://walnuthillcollege.edu/wp-content/uploads/2021/08/WH_Header_Degree_Programs-360x300.png",
-      title: 'Lorem Ipsum is simply dummy text ',
+      image: "assets/images/on_boarding_2.jpg",
+      title: 'كل مكان ممیز... بترشیحك!',
       description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's .",
+          "أضف أماكنك المفضلة أو اكتشف ترشیحات السكان المحلیین للحصول على تجربة لا تنسي.",
     ),
     OnBoradingModel(
-      image:
-          "https://walnuthillcollege.edu/wp-content/uploads/2021/08/WH_Header_Degree_Programs-360x300.png",
-      title: 'Lorem Ipsum is simply dummy text ',
+      image: "assets/images/on_boarding_3.jpg",
+      title: 'شارك، اكتشف، واستمتع!',
       description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's .",
+          "تصفح بسھولة، أضف تقییمات، وشارك تجاربك مع الأصدقاء. معنا، اكتشاف الأماكن الممیزة أصبح أسھل من أي وقت مضى.",
     ),
   ];
 
@@ -79,7 +76,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                     return Column(
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.56,
+                          height: MediaQuery.of(context).size.height * 0.6,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.elliptical(
@@ -89,7 +86,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                             ),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(
+                              image: AssetImage(
                                 model.image,
                               ),
                             ),
@@ -127,7 +124,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               ),
               Positioned(
                 top: MediaQuery.of(context).size.height *
-                    0.58, // Adjust this value as needed
+                    0.62, // Adjust this value as needed
                 left: 0,
                 right: 0,
                 child: Center(
