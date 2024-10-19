@@ -26,7 +26,7 @@ class AppLogoWithName extends StatelessWidget {
           CustomText(
             text: "BNS Rashhuli",
             customStyle: GoogleFonts.jomhuria(
-              fontSize: 58,
+              fontSize: 50,
               color: kMainColor,
               // fontWeight: FontWeight.bold,
             ),

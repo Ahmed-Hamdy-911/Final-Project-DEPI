@@ -23,20 +23,6 @@ class SettingsView extends StatelessWidget {
               naviPush(context, widgetName: const ProfileView());
             },
           ),
-          // CustomListTitle(
-          //   title: ,
-          //   icon: Icons.language,
-          //   onTap: () {},
-          // ),
-          // CustomThemTitle(),
-          // CustomListTitle(
-          //   title: AppLocalizations.of(context)!.settings_style_note_label,
-          //   icon: Icons.style_outlined,
-          //   onTap: () {
-          //     // CacheHelper.clearData();
-          //   },
-          // ),
-
           CustomListTitle(
             title: 'تغيير الدور',
             icon: Icons.admin_panel_settings_outlined,
@@ -46,7 +32,7 @@ class SettingsView extends StatelessWidget {
           ),
           CustomListTitle(
             title: 'تغيير السيم',
-            icon: IconlyLight.category,
+            icon: Icons.brightness_4_outlined,
             onTap: () {
               showSnakBar(context, message: 'قريبا...');
             },
@@ -66,11 +52,20 @@ class SettingsView extends StatelessWidget {
             },
           ),
           CustomListTitle(
+            title: 'فتح التطبيق من البدايه ل العرض ',
+            subtitle: '(للاختبار)',
+            icon: Icons.restart_alt,
+            onTap: () {
+              CacheHelper.clearData();
+              BlocProvider.of<AuthCubit>(context).logOut(context);
+              showSnakBar(context, message: 'اعد تشغيل التطبيق');
+            },
+          ),
+          CustomListTitle(
             title: "تسجيل الخروج",
             icon: Icons.logout_rounded,
             onTap: () {
               BlocProvider.of<AuthCubit>(context).logOut(context);
-              // CacheHelper.clearData();
             },
           ),
         ],
